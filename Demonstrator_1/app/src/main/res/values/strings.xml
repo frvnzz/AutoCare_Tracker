@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Demonstrator 1 Calculator</string>
-    <string name="greeting">Hello there!</string>
-    <string name="alarm_clock">Alarm clock</string>
-    <string name="title_activity_second">SecondActivity</string>
-</resources>
