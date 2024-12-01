@@ -20,6 +20,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Demonstrator_2_BasicNotes"
+rootProject.name = "AutoCare_Tracker"
 include(":app")
  

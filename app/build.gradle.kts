@@ -5,18 +5,12 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10"
 }
 
-repositories {
-    google()
-    mavenCentral()
-    maven("https://plugins.gradle.org/m2/")
-}
-
 android {
-    namespace = "com.example.demonstrator_2_basicnotes"
+    namespace = "com.example.autocaretracker"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.demonstrator_2_basicnotes"
+        applicationId = "com.example.autocaretracker"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
