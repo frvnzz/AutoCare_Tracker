@@ -1,4 +1,4 @@
-package com.example.autocaretracker.ui
+package com.example.autocaretracker.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -13,11 +13,11 @@ import com.example.autocaretracker.ui.ViewCarsScreen
 import com.example.autocaretracker.ui.theme.AutoCareTrackerTheme
 import com.example.autocaretracker.data.CarRepository
 import com.example.autocaretracker.data.MaintenanceRepository
-import com.example.autocaretracker.data.AutoCareDatabase
+import com.example.autocaretracker.data.AutoCareTrackerDatabase
 
 class MainActivity : ComponentActivity() {
-    private val carDao by lazy { AutoCareDatabase.getDatabase(this).carDao() }
-    private val maintenanceDao by lazy { AutoCareDatabase.getDatabase(this).maintenanceDao() }
+    private val carDao by lazy { AutoCareTrackerDatabase.getDatabase(this).carDao() }
+    private val maintenanceDao by lazy { AutoCareTrackerDatabase.getDatabase(this).maintenanceDao() }
     private val carRepository by lazy { CarRepository(carDao) }
     private val maintenanceRepository by lazy { MaintenanceRepository(maintenanceDao) }
 
