@@ -1,0 +1,5 @@
+<resources>
+    <string name="resources_text">Resources are great</string>
+    <string name="app_name">Lecture 2</string>
+    <string name="title_activity_second">SecondActivity</string>
+</resources>
