@@ -1,5 +1,6 @@
 package com.example.autocaretracker.ui
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,7 +32,14 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
                     .fillMaxSize()
             ) {
                 items(cars.value) { car ->
-                    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp)
+                            .clickable {
+                                navController.navigate("view_car_detail/${car.car_id}")
+                            }
+                    ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,

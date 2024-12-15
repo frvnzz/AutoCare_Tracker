@@ -1,20 +1,21 @@
 package com.example.autocaretracker.ui
 
+import android.app.Activity
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,17 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
         var latestMileage by remember { mutableStateOf("") }
         val focusManager = LocalFocusManager.current
         val focusRequester = remember { FocusRequester() }
+        val context = LocalContext.current
+
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { uri ->
+                    imagePath = uri.toString()
+                }
+            }
+        }
 
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
@@ -65,22 +77,24 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
                     keyboardOptions = KeyboardOptions.Default,
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
                 )
-                OutlinedTextField(
-                    value = imagePath,
-                    onValueChange = { imagePath = it },
-                    label = { Text("Image Path") },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default,
-                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
-                )
+                Button(
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_PICK).apply {
+                            type = "image/*"
+                        }
+                        launcher.launch(intent)
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Select Image")
+                }
                 OutlinedTextField(
                     value = latestMileage,
                     onValueChange = { latestMileage = it },
                     label = { Text("Latest Mileage") },
                     modifier = Modifier
                         .fillMaxWidth(),
-                    keyboardOptions = KeyboardOptions.Default,
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
                 )
                 Spacer(modifier = Modifier.weight(1f))
@@ -88,14 +102,19 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
             FloatingActionButton(
                 onClick = {
                     if (carName.isNotEmpty() && latestMileage.isNotEmpty()) {
-                        carViewModel.insert(Car(name = carName, imagePath = imagePath, latestMileage = latestMileage.toInt()))
-                        navController.navigate("view_cars") {
-                            popUpTo("add_car") { inclusive = true }
-                            launchSingleTop = true
-                            anim {
-                                enter = 0
-                                exit = 0
+                        try {
+                            val mileage = latestMileage.trim().toInt()
+                            carViewModel.insert(Car(name = carName, imagePath = imagePath, latestMileage = mileage))
+                            navController.navigate("view_cars") {
+                                popUpTo("add_car") { inclusive = true }
+                                launchSingleTop = true
+                                anim {
+                                    enter = 0
+                                    exit = 0
+                                }
                             }
+                        } catch (e: NumberFormatException) {
+                            // Handle the error, e.g., show a toast or a snackbar
                         }
                     }
                 },

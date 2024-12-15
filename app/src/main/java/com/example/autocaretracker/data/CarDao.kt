@@ -10,6 +10,9 @@ interface CarDao {
     @Query("SELECT * FROM cars ORDER BY name ASC")
     fun getAllCars(): Flow<List<Car>>
 
+    @Query("SELECT * FROM cars WHERE car_id = :carId")
+    fun getCarById(carId: Int): Flow<Car?>
+
     @Insert
     suspend fun insert(car: Car)
 

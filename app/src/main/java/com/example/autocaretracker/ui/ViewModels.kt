@@ -13,6 +13,10 @@ import kotlinx.coroutines.launch
 class CarViewModel(private val repository: CarRepository) : ViewModel() {
     val allCars: Flow<List<Car>> = repository.allCars
 
+    fun getCarById(carId: Int): Flow<Car?> {
+        return repository.getCarById(carId)
+    }
+
     fun insert(car: Car) = viewModelScope.launch {
         repository.insert(car)
     }
