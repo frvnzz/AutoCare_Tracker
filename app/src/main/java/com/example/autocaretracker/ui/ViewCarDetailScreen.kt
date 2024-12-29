@@ -45,8 +45,14 @@ fun ViewCarDetailScreen(navController: NavController, carId: Int, carRepository:
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Latest Mileage: ${carDetail.latestMileage}", style = MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { navController.popBackStack() }) {
-                    Text("Back")
+                Row {
+                    Button(onClick = { navController.popBackStack() }) {
+                        Text("Back")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(onClick = { navController.navigate("edit_car/$carId") }) {
+                        Text("Edit")
+                    }
                 }
             }
         }

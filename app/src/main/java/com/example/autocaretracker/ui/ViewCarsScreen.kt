@@ -19,6 +19,10 @@ import com.example.autocaretracker.data.CarRepository
 import java.text.SimpleDateFormat
 import java.util.*
 import com.example.autocaretracker.ui.theme.AutoCareTrackerTheme
+import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.rememberImagePainter
 
 @Composable
 fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
@@ -40,23 +44,34 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
                                 navController.navigate("view_car_detail/${car.car_id}")
                             }
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.fillMaxWidth()
-                            ) {
-                                Column(modifier = Modifier.weight(1f)) {
-                                    Text(car.name, style = MaterialTheme.typography.bodyLarge)
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    Text("Latest Mileage: ${car.latestMileage}", style = MaterialTheme.typography.bodySmall)
-                                }
-                                IconButton(onClick = { carViewModel.delete(car.car_id) }) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_delete),
-                                        contentDescription = "Delete",
-                                        tint = Color.Red
-                                    )
-                                }
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
+                        ) {
+                            car.imagePath?.let { imagePath ->
+                                val imageUri = Uri.parse(imagePath)
+                                Image(
+                                    painter = rememberImagePainter(data = imageUri),
+                                    contentDescription = "Car Image",
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .padding(end = 16.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(car.name, style = MaterialTheme.typography.bodyLarge)
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text("Latest Mileage: ${car.latestMileage}", style = MaterialTheme.typography.bodySmall)
+                            }
+                            IconButton(onClick = { carViewModel.delete(car.car_id) }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_delete),
+                                    contentDescription = "Delete",
+                                    tint = Color.Red
+                                )
                             }
                         }
                     }

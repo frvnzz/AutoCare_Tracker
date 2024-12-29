@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.autocaretracker.ui.AddCarScreen
 import com.example.autocaretracker.ui.ViewCarsScreen
 import com.example.autocaretracker.ui.ViewCarDetailScreen
+import com.example.autocaretracker.ui.EditCarScreen
 import com.example.autocaretracker.ui.theme.AutoCareTrackerTheme
 import com.example.autocaretracker.data.CarRepository
 import com.example.autocaretracker.data.MaintenanceRepository
@@ -86,6 +87,10 @@ class MainActivity : ComponentActivity() {
                         composable("view_car_detail/{carId}") { backStackEntry ->
                             val carId = backStackEntry.arguments?.getString("carId")?.toInt() ?: return@composable
                             ViewCarDetailScreen(navController, carId, carRepository)
+                        }
+                        composable("edit_car/{carId}") { backStackEntry ->
+                            val carId = backStackEntry.arguments?.getString("carId")?.toInt() ?: return@composable
+                            EditCarScreen(navController, carId, carRepository)
                         }
                     }
                 }
