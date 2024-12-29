@@ -35,9 +35,18 @@ fun EditCarScreen(navController: NavController, carId: Int, carRepository: CarRe
         val carState = carViewModel.getCarById(carId).collectAsState(initial = null)
         val car = carState.value
 
-        var carName by remember { mutableStateOf(car?.name ?: "") }
-        var imagePath by remember { mutableStateOf(car?.imagePath ?: "") }
-        var latestMileage by remember { mutableStateOf(car?.latestMileage?.toString() ?: "") }
+        var carName by remember { mutableStateOf("") }
+        var imagePath by remember { mutableStateOf("") }
+        var latestMileage by remember { mutableStateOf("") }
+
+        LaunchedEffect(car) {
+            car?.let {
+                carName = it.name
+                imagePath = it.imagePath
+                latestMileage = it.latestMileage.toString()
+            }
+        }
+
         val focusManager = LocalFocusManager.current
         val focusRequester = remember { FocusRequester() }
         val context = LocalContext.current

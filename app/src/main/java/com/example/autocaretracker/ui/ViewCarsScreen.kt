@@ -77,28 +77,46 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
                     }
                 }
             }
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate("add_car") {
-                        popUpTo("view_cars") { inclusive = true }
-                        launchSingleTop = true
-                        anim {
-                            enter = 0
-                            exit = 0
-                        }
-                    }
-                },
+            Column(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)
-                    .size(72.dp), // button size
-                containerColor = MaterialTheme.colorScheme.primary
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add_car),
-                    contentDescription = "Add Car",
-                    modifier = Modifier.size(36.dp) // icon size (inside button)
-                )
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate("add_car") {
+                            popUpTo("view_cars") { inclusive = true }
+                            launchSingleTop = true
+                            anim {
+                                enter = 0
+                                exit = 0
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                        .size(72.dp), // button size
+                    containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_add_car),
+                        contentDescription = "Add Car",
+                        modifier = Modifier.size(36.dp) // icon size (inside button)
+                    )
+                }
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate("add_maintenance")
+                    },
+                    modifier = Modifier.size(72.dp), // button size
+                    containerColor = MaterialTheme.colorScheme.primary
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_add),
+                        contentDescription = "Add Maintenance",
+                        modifier = Modifier.size(36.dp) // icon size (inside button)
+                    )
+                }
             }
         }
     }
