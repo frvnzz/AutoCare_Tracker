@@ -43,7 +43,6 @@ fun AddMaintenanceScreen(navController: NavController, carRepository: CarReposit
         var date by remember { mutableStateOf("") }
         var notes by remember { mutableStateOf("") }
         val focusManager = LocalFocusManager.current
-        val focusRequester = remember { FocusRequester() }
         val context = LocalContext.current
 
         val calendar = Calendar.getInstance()
@@ -57,17 +56,17 @@ fun AddMaintenanceScreen(navController: NavController, carRepository: CarReposit
             calendar.get(Calendar.DAY_OF_MONTH)
         )
 
-        LaunchedEffect(Unit) {
-            focusRequester.requestFocus()
-        }
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null,
-                    onClick = { focusManager.clearFocus(force = true) }
+                    onClick = {
+                        if (!expanded) {
+                            focusManager.clearFocus(force = true)
+                        }
+                    }
                 )
                 .padding(16.dp)
         ) {
@@ -86,8 +85,12 @@ fun AddMaintenanceScreen(navController: NavController, carRepository: CarReposit
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Car") },
+                        trailingIcon = {
+                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                        },
                         modifier = Modifier
                             .fillMaxWidth()
+                            .menuAnchor()
                             .clickable { expanded = true }
                     )
                     ExposedDropdownMenu(
@@ -110,8 +113,7 @@ fun AddMaintenanceScreen(navController: NavController, carRepository: CarReposit
                     onValueChange = { task = it },
                     label = { Text("Task") },
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                        .fillMaxWidth(),
                     keyboardOptions = KeyboardOptions.Default,
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
                 )
@@ -142,7 +144,7 @@ fun AddMaintenanceScreen(navController: NavController, carRepository: CarReposit
                             car_id = selectedCar!!.car_id,
                             task = task,
                             date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(date)?.time ?: 0,
-                            currentMileage = 0, // You can add a field for current mileage if needed
+                            currentMileage = 0,
                             notes = notes
                         )
                         maintenanceViewModel.insert(maintenance)
@@ -159,13 +161,13 @@ fun AddMaintenanceScreen(navController: NavController, carRepository: CarReposit
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(16.dp)
-                    .size(72.dp), // button size
+                    .size(72.dp),
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_save_car),
                     contentDescription = "Save Maintenance",
-                    modifier = Modifier.size(36.dp) // icon size (inside button)
+                    modifier = Modifier.size(36.dp)
                 )
             }
         }
