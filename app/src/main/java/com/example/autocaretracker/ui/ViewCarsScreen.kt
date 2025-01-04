@@ -1,5 +1,7 @@
 package com.example.autocaretracker.ui
 
+import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,19 +12,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.autocaretracker.R
 import com.example.autocaretracker.data.CarRepository
-import java.text.SimpleDateFormat
-import java.util.*
 import com.example.autocaretracker.ui.theme.AutoCareTrackerTheme
-import android.net.Uri
-import androidx.compose.foundation.Image
-import androidx.compose.ui.layout.ContentScale
-import coil.compose.rememberImagePainter
 
 @Composable
 fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
@@ -31,91 +29,113 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
         val cars = carViewModel.allCars.collectAsState(initial = emptyList())
 
         Box(modifier = Modifier.fillMaxSize()) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-            ) {
-                items(cars.value) { car ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .clickable {
-                                navController.navigate("view_car_detail/${car.car_id}")
-                            }
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
+            Column(modifier = Modifier.fillMaxSize()) {
+                Spacer(modifier = Modifier.height(32.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        FloatingActionButton(
+                            onClick = {
+                                navController.navigate("add_car") {
+                                    popUpTo("view_cars") { inclusive = true }
+                                    launchSingleTop = true
+                                    anim {
+                                        enter = 0
+                                        exit = 0
+                                    }
+                                }
+                            },
+                            modifier = Modifier.size(72.dp),
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_add_car),
+                                contentDescription = "Add Car",
+                                modifier = Modifier.size(36.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Add car", style = MaterialTheme.typography.bodySmall)
+                    }
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        FloatingActionButton(
+                            onClick = {
+                                navController.navigate("add_maintenance")
+                            },
+                            modifier = Modifier.size(72.dp),
+                            containerColor = MaterialTheme.colorScheme.primary
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_add),
+                                contentDescription = "Add Maintenance",
+                                modifier = Modifier.size(36.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp)) // Padding between button and caption
+                        Text(text = "Maintenance", style = MaterialTheme.typography.bodySmall)
+                    }
+                }
+
+                Text(
+                    text = "Cars",
+                    style = MaterialTheme.typography.headlineMedium,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(start = 16.dp, top = 32.dp)
+                )
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 16.dp)
+                ) {
+                    items(cars.value) { car ->
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp)
+                                .padding(8.dp)
+                                .clickable {
+                                    navController.navigate("view_car_detail/${car.car_id}")
+                                },
+                            elevation = CardDefaults.cardElevation(4.dp)
                         ) {
-                            car.imagePath?.let { imagePath ->
-                                val imageUri = Uri.parse(imagePath)
-                                Image(
-                                    painter = rememberImagePainter(data = imageUri),
-                                    contentDescription = "Car Image",
-                                    modifier = Modifier
-                                        .size(100.dp)
-                                        .padding(end = 16.dp),
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(car.name, style = MaterialTheme.typography.bodyLarge)
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text("Latest Mileage: ${car.latestMileage}", style = MaterialTheme.typography.bodySmall)
-                            }
-                            IconButton(onClick = { carViewModel.delete(car.car_id) }) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_delete),
-                                    contentDescription = "Delete",
-                                    tint = Color.Red
-                                )
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                car.imagePath?.let { imagePath ->
+                                    val imageUri = Uri.parse(imagePath)
+                                    Image(
+                                        painter = rememberImagePainter(data = imageUri),
+                                        contentDescription = "Car Image",
+                                        modifier = Modifier
+                                            .size(100.dp)
+                                            .padding(end = 16.dp),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(car.name, style = MaterialTheme.typography.bodyLarge)
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text("Latest Mileage: ${car.latestMileage}", style = MaterialTheme.typography.bodySmall)
+                                }
+                                IconButton(onClick = { carViewModel.delete(car.car_id) }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_delete),
+                                        contentDescription = "Delete",
+                                        tint = Color.Red
+                                    )
+                                }
                             }
                         }
                     }
-                }
-            }
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp)
-            ) {
-                FloatingActionButton(
-                    onClick = {
-                        navController.navigate("add_car") {
-                            popUpTo("view_cars") { inclusive = true }
-                            launchSingleTop = true
-                            anim {
-                                enter = 0
-                                exit = 0
-                            }
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(bottom = 16.dp)
-                        .size(72.dp), // button size
-                    containerColor = MaterialTheme.colorScheme.primary
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_add_car),
-                        contentDescription = "Add Car",
-                        modifier = Modifier.size(36.dp) // icon size (inside button)
-                    )
-                }
-                FloatingActionButton(
-                    onClick = {
-                        navController.navigate("add_maintenance")
-                    },
-                    modifier = Modifier.size(72.dp), // button size
-                    containerColor = MaterialTheme.colorScheme.primary
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_add),
-                        contentDescription = "Add Maintenance",
-                        modifier = Modifier.size(36.dp) // icon size (inside button)
-                    )
                 }
             }
         }
