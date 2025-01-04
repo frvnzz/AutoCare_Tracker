@@ -93,7 +93,7 @@ fun ViewCarDetailScreen(
                             painter = painterResource(R.drawable.ic_edit),
                             contentDescription = "Edit",
                             modifier = Modifier.size(24.dp),
-                            tint = Color.White
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                     IconButton(

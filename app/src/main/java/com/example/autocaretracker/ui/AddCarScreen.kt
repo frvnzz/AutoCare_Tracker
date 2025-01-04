@@ -79,16 +79,19 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
                     .align(Alignment.Center)
             ) {
                 Spacer(modifier = Modifier.weight(1f))
+
                 OutlinedTextField(
                     value = carName,
                     onValueChange = { carName = it },
                     label = { Text("Car Name") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .focusRequester(focusRequester),
+                        .focusRequester(focusRequester)
+                        .padding(vertical = 8.dp),
                     keyboardOptions = KeyboardOptions.Default,
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
                 )
+
                 Button(
                     onClick = {
                         val intent = Intent(Intent.ACTION_PICK).apply {
@@ -96,21 +99,28 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
                         }
                         launcher.launch(intent)
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
                 ) {
                     Text("Select Image")
                 }
+
                 OutlinedTextField(
                     value = latestMileage,
                     onValueChange = { latestMileage = it },
-                    label = { Text("Latest Mileage") },
+                    label = { Text("Mileage") },
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = androidx.compose.ui.text.input.KeyboardType.Number),
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
                 )
+
                 Spacer(modifier = Modifier.weight(1f))
             }
+
+            // fab for save
             FloatingActionButton(
                 onClick = {
                     if (carName.isNotEmpty() && latestMileage.isNotEmpty()) {
@@ -126,7 +136,7 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
                                 }
                             }
                         } catch (e: NumberFormatException) {
-                            // Handle error
+                            // erroor
                         }
                     }
                 },
@@ -139,7 +149,7 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_save_car),
                     contentDescription = "Save Car",
-                    modifier = Modifier.size(36.dp) // icon size (inside button)
+                    modifier = Modifier.size(36.dp) // Icon size inside button
                 )
             }
         }
