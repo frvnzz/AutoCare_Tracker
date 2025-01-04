@@ -2,6 +2,7 @@ package com.example.autocaretracker.ui
 
 import android.app.Activity
 import android.content.Intent
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -49,6 +50,17 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
 
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
+        }
+
+        BackHandler {
+            navController.navigate("view_cars") {
+                popUpTo("add_car") { inclusive = true }
+                launchSingleTop = true
+                anim {
+                    enter = 0
+                    exit = 0
+                }
+            }
         }
 
         Box(
@@ -114,7 +126,7 @@ fun AddCarScreen(navController: NavController, carRepository: CarRepository) {
                                 }
                             }
                         } catch (e: NumberFormatException) {
-                            // Handle the error, e.g., show a toast or a snackbar
+                            // Handle error
                         }
                     }
                 },

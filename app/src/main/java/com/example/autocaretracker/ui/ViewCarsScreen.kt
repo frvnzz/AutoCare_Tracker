@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +26,19 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
     AutoCareTrackerTheme {
         val carViewModel: CarViewModel = viewModel(factory = CarViewModelFactory(carRepository))
         val cars = carViewModel.allCars.collectAsState(initial = emptyList())
+        var showDialog by remember { mutableStateOf(false) }
+        var carToDelete by remember { mutableStateOf<Int?>(null) }
+
+        ConfirmDialog(
+            showDialog = showDialog,
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                carToDelete?.let { carViewModel.delete(it) }
+                showDialog = false
+            },
+            title = "Confirm Delete",
+            text = "Are you sure you want to delete this car?"
+        )
 
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.fillMaxSize()) {
@@ -76,8 +88,8 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
                                 modifier = Modifier.size(36.dp)
                             )
                         }
-                        Spacer(modifier = Modifier.height(8.dp)) // Padding between button and caption
-                        Text(text = "Maintenance", style = MaterialTheme.typography.bodySmall)
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "Add Maintenance", style = MaterialTheme.typography.bodySmall)
                     }
                 }
 
@@ -126,7 +138,10 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
                                     Spacer(modifier = Modifier.height(8.dp))
                                     Text("Latest Mileage: ${car.latestMileage}", style = MaterialTheme.typography.bodySmall)
                                 }
-                                IconButton(onClick = { carViewModel.delete(car.car_id) }) {
+                                IconButton(onClick = {
+                                    carToDelete = car.car_id
+                                    showDialog = true
+                                }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.ic_delete),
                                         contentDescription = "Delete",
