@@ -126,8 +126,10 @@ fun AddMaintenanceScreen(navController: NavController, carRepository: CarReposit
                             focusManager.clearFocus()
                             datePickerDialog.show()
                         },
-                    readOnly = true
+                    readOnly = true,
+                    enabled = false
                 )
+
                 OutlinedTextField(
                     value = notes,
                     onValueChange = { notes = it },

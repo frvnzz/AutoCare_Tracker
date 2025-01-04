@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
                         composable("add_car") { AddCarScreen(navController, carRepository) }
                         composable("view_car_detail/{carId}") { backStackEntry ->
                             val carId = backStackEntry.arguments?.getString("carId")?.toInt() ?: return@composable
-                            ViewCarDetailScreen(navController, carId, carRepository)
+                            ViewCarDetailScreen(navController, carId, carRepository, maintenanceRepository)
                         }
                         composable("edit_car/{carId}") { backStackEntry ->
                             val carId = backStackEntry.arguments?.getString("carId")?.toInt() ?: return@composable
