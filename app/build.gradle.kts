@@ -56,18 +56,17 @@ android {
 
 dependencies {
     implementation(libs.androidx.navigation.compose)
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation("androidx.room:room-runtime:2.6.1")
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.room.runtime)
     implementation(libs.material)
-    ksp("androidx.room:room-compiler:2.6.1")
+    implementation (libs.androidx.navigation.compose.v285)
+    ksp(libs.androidx.room.compiler)
 
-    // Retrofit
-    val retrofit_version = "2.11.0"
-    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:$retrofit_version")
-    implementation("com.squareup.retrofit2:retrofit:$retrofit_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.converter.kotlinx.serialization)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization.json)
 
-    implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation(libs.coil.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
@@ -78,8 +77,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.compose.foundation:foundation:1.5.1")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.30.1")
+    implementation(libs.androidx.foundation)
+    implementation(libs.accompanist.navigation.animation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
