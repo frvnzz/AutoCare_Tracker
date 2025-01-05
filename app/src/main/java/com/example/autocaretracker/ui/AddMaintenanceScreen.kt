@@ -47,6 +47,7 @@ fun AddMaintenanceScreen(
         var date by remember { mutableStateOf("") }
         var notes by remember { mutableStateOf("") }
         var currentMileage by remember { mutableStateOf("") }
+        var showWarningDialog by remember { mutableStateOf(false) }
         val focusManager = LocalFocusManager.current
         val context = LocalContext.current
 
@@ -255,6 +256,8 @@ fun AddMaintenanceScreen(
                         } catch (e: NumberFormatException) {
                             // handle error
                         }
+                    } else {
+                        showWarningDialog = true
                     }
                 },
                 modifier = Modifier
@@ -270,5 +273,16 @@ fun AddMaintenanceScreen(
                 )
             }
         }
+
+        // Warning popup
+        ConfirmDialog(
+            showDialog = showWarningDialog,
+            onDismiss = { showWarningDialog = false },
+            onConfirm = { showWarningDialog = false },
+            title = "Incomplete Fields",
+            text = "Please fill in all fields (except notes) before saving.",
+            confirmButtonText = "OK",
+            dismissButtonText = ""
+        )
     }
 }

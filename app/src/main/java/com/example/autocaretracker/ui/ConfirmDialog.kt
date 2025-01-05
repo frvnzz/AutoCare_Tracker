@@ -11,7 +11,9 @@ fun ConfirmDialog(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     title: String,
-    text: String
+    text: String,
+    confirmButtonText: String = "Confirm",
+    dismissButtonText: String = "Cancel"
 ) {
     if (showDialog) {
         AlertDialog(
@@ -20,12 +22,14 @@ fun ConfirmDialog(
             text = { Text(text) },
             confirmButton = {
                 TextButton(onClick = onConfirm) {
-                    Text("Delete")
+                    Text(confirmButtonText)
                 }
             },
             dismissButton = {
-                TextButton(onClick = onDismiss) {
-                    Text("Cancel")
+                if (dismissButtonText.isNotEmpty()) {
+                    TextButton(onClick = onDismiss) {
+                        Text(dismissButtonText)
+                    }
                 }
             }
         )
