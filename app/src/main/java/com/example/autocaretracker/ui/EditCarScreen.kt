@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.autocaretracker.R
 import com.example.autocaretracker.data.Car
@@ -97,7 +98,7 @@ fun EditCarScreen(navController: NavController, carId: Int, carRepository: CarRe
                 Spacer(modifier = Modifier.height(16.dp))
                 if (imagePath.isNotEmpty()) {
                     Image(
-                        painter = rememberImagePainter(data = Uri.parse(imagePath)),
+                        painter = rememberAsyncImagePainter(model = Uri.parse(imagePath)),
                         contentDescription = "Car Image",
                         modifier = Modifier
                             .fillMaxWidth()

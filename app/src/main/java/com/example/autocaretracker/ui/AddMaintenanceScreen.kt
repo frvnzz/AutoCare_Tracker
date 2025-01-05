@@ -231,7 +231,7 @@ fun AddMaintenanceScreen(
             // Save Button
             FloatingActionButton(
                 onClick = {
-                    val finalTask = if (customTask.isNotEmpty()) customTask else selectedTask
+                    val finalTask = customTask.ifEmpty { selectedTask }
                     if (selectedCar != null && finalTask.isNotEmpty() && date.isNotEmpty() && currentMileage.isNotEmpty()) {
                         try {
                             val mileage = currentMileage.trim().toInt()

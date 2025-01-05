@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.autocaretracker.R
 import com.example.autocaretracker.data.CarRepository
@@ -79,10 +80,10 @@ fun ViewCarDetailScreen(
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    carDetail.imagePath?.let { imagePath ->
+                    carDetail.imagePath.let { imagePath ->
                         val imageUri = Uri.parse(imagePath)
                         Image(
-                            painter = rememberImagePainter(data = imageUri),
+                            painter = rememberAsyncImagePainter(model = imageUri),
                             contentDescription = "Car Image",
                             modifier = Modifier
                                 .fillMaxWidth()
