@@ -27,7 +27,7 @@ import com.example.autocaretracker.data.AutoCareTrackerDatabase
 class MainActivity : ComponentActivity() {
     private val carDao by lazy { AutoCareTrackerDatabase.getDatabase(this).carDao() }
     private val maintenanceDao by lazy { AutoCareTrackerDatabase.getDatabase(this).maintenanceDao() }
-    private val carRepository by lazy { CarRepository(carDao) }
+    private val carRepository by lazy { CarRepository(carDao, maintenanceDao) }
     private val maintenanceRepository by lazy { MaintenanceRepository(maintenanceDao) }
 
     private val requestPermissionLauncher = registerForActivityResult(

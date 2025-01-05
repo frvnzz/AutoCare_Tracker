@@ -15,4 +15,7 @@ interface MaintenanceDao {
 
     @Query("DELETE FROM maintenance WHERE maintenance_id = :maintenanceId")
     suspend fun delete(maintenanceId: Int)
+
+    @Query("DELETE FROM maintenance WHERE car_id = :carId")
+    suspend fun deleteMaintenanceForCar(carId: Int)
 }

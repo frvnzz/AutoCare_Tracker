@@ -53,11 +53,11 @@ fun ViewCarsScreen(navController: NavController, carRepository: CarRepository) {
             showDialog = showDialog,
             onDismiss = { showDialog = false },
             onConfirm = {
-                carToDelete?.let { carViewModel.delete(it) }
+                carToDelete?.let { carViewModel.deleteCarAndMaintenance(it) }
                 showDialog = false
             },
             title = "Confirm Delete",
-            text = "Are you sure you want to delete this car?"
+            text = "Are you sure you want to delete this car and all its maintenance items?"
         )
 
         Box(modifier = Modifier.fillMaxSize()) {

@@ -28,6 +28,10 @@ class CarViewModel(private val repository: CarRepository) : ViewModel() {
     fun delete(carId: Int) = viewModelScope.launch {
         repository.delete(carId)
     }
+
+    fun deleteCarAndMaintenance(carId: Int) = viewModelScope.launch {
+        repository.deleteCarAndMaintenance(carId)
+    }
 }
 
 class CarViewModelFactory(private val repository: CarRepository) : ViewModelProvider.Factory {

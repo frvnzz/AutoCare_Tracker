@@ -2,7 +2,7 @@ package com.example.autocaretracker.data
 
 import kotlinx.coroutines.flow.Flow
 
-class CarRepository(private val carDao: CarDao) {
+class CarRepository(private val carDao: CarDao, private val maintenanceDao: MaintenanceDao) {
     val allCars: Flow<List<Car>> = carDao.getAllCars()
 
     fun getCarById(carId: Int): Flow<Car?> {
@@ -19,5 +19,10 @@ class CarRepository(private val carDao: CarDao) {
 
     suspend fun delete(carId: Int) {
         carDao.delete(carId)
+    }
+
+    suspend fun deleteCarAndMaintenance(carId: Int) {
+        carDao.delete(carId)
+        maintenanceDao.deleteMaintenanceForCar(carId)
     }
 }

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.autocaretracker.R
 import com.example.autocaretracker.data.CarRepository
 import com.example.autocaretracker.data.Car
@@ -43,6 +42,7 @@ fun ViewCarDetailScreen(
 
         val car = carState.value
         var showDialog by remember { mutableStateOf(false) }
+        var showDeleteCarDialog by remember { mutableStateOf(false) }
         var maintenanceToDelete by remember { mutableStateOf<Maintenance?>(null) }
 
         ConfirmDialog(
@@ -54,6 +54,25 @@ fun ViewCarDetailScreen(
             },
             title = "Confirm Delete",
             text = "Are you sure you want to delete this maintenance item?"
+        )
+
+        ConfirmDialog(
+            showDialog = showDeleteCarDialog,
+            onDismiss = { showDeleteCarDialog = false },
+            onConfirm = {
+                car?.let { carViewModel.deleteCarAndMaintenance(it.car_id) }
+                showDeleteCarDialog = false
+                navController.navigate("view_cars") {
+                    popUpTo("view_car_detail/$carId") { inclusive = true }
+                    launchSingleTop = true
+                    anim {
+                        enter = 0
+                        exit = 0
+                    }
+                }
+            },
+            title = "Confirm Delete",
+            text = "Are you sure you want to delete this car and all its maintenance items?"
         )
 
         car?.let { carDetail: Car ->
@@ -112,7 +131,7 @@ fun ViewCarDetailScreen(
                         )
                     }
                     IconButton(
-                        onClick = { showDialog = true },
+                        onClick = { showDeleteCarDialog = true },
                         modifier = Modifier.size(56.dp)
                     ) {
                         Icon(
