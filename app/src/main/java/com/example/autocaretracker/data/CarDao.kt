@@ -3,6 +3,7 @@ package com.example.autocaretracker.data
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,6 +16,9 @@ interface CarDao {
 
     @Insert
     suspend fun insert(car: Car)
+
+    @Update
+    suspend fun update(car: Car)
 
     @Query("DELETE FROM cars WHERE car_id = :carId")
     suspend fun delete(carId: Int)

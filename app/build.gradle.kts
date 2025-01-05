@@ -78,7 +78,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation("androidx.compose.foundation:foundation:1.5.1") // Add this line
+    implementation("androidx.compose.foundation:foundation:1.5.1")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.30.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

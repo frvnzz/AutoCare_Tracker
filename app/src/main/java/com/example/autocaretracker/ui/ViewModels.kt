@@ -21,6 +21,10 @@ class CarViewModel(private val repository: CarRepository) : ViewModel() {
         repository.insert(car)
     }
 
+    fun update(car: Car) = viewModelScope.launch {
+        repository.update(car)
+    }
+
     fun delete(carId: Int) = viewModelScope.launch {
         repository.delete(carId)
     }

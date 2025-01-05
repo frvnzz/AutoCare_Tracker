@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -23,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.example.autocaretracker.R
 import com.example.autocaretracker.data.Car
 import com.example.autocaretracker.data.CarRepository
@@ -91,6 +94,18 @@ fun EditCarScreen(navController: NavController, carId: Int, carRepository: CarRe
                     keyboardOptions = KeyboardOptions.Default,
                     keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
                 )
+                Spacer(modifier = Modifier.height(16.dp))
+                if (imagePath.isNotEmpty()) {
+                    Image(
+                        painter = rememberImagePainter(data = Uri.parse(imagePath)),
+                        contentDescription = "Car Image",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
                         val intent = Intent(Intent.ACTION_PICK).apply {
@@ -100,7 +115,7 @@ fun EditCarScreen(navController: NavController, carId: Int, carRepository: CarRe
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Select Image")
+                    Text("Edit Image")
                 }
                 OutlinedTextField(
                     value = latestMileage,
@@ -118,17 +133,19 @@ fun EditCarScreen(navController: NavController, carId: Int, carRepository: CarRe
                     if (carName.isNotEmpty() && latestMileage.isNotEmpty()) {
                         try {
                             val mileage = latestMileage.trim().toInt()
-                            carViewModel.insert(Car(carId, carName, imagePath, mileage))
-                            navController.navigate("view_cars") {
-                                popUpTo("edit_car") { inclusive = true }
-                                launchSingleTop = true
-                                anim {
-                                    enter = 0
-                                    exit = 0
+                            car?.let {
+                                carViewModel.update(Car(it.car_id, carName, imagePath, mileage))
+                                navController.navigate("view_cars") {
+                                    popUpTo("edit_car/$carId") { inclusive = true }
+                                    launchSingleTop = true
+                                    anim {
+                                        enter = 0
+                                        exit = 0
+                                    }
                                 }
                             }
                         } catch (e: NumberFormatException) {
-                            // show error
+                            // handle error
                         }
                     }
                 },

@@ -13,6 +13,10 @@ class CarRepository(private val carDao: CarDao) {
         carDao.insert(car)
     }
 
+    suspend fun update(car: Car) {
+        carDao.update(car)
+    }
+
     suspend fun delete(carId: Int) {
         carDao.delete(carId)
     }
