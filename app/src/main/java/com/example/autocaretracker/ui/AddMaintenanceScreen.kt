@@ -134,7 +134,7 @@ fun AddMaintenanceScreen(
                     onExpandedChange = { predefinedTaskDropdownExpanded = !predefinedTaskDropdownExpanded }
                 ) {
                     OutlinedTextField(
-                        value = selectedTask.ifEmpty { "Select or Add Task" },
+                        value = selectedTask.ifEmpty { "Select Task" },
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Task") },
