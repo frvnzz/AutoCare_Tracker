@@ -40,12 +40,13 @@ fun AddMaintenanceScreen(
         val maintenanceViewModel: MaintenanceViewModel = viewModel(factory = MaintenanceViewModelFactory(maintenanceRepository))
 
         var selectedCar by remember { mutableStateOf<Car?>(null) }
-        var carDropdownExpanded by remember { mutableStateOf(false) }
+        var carDropdownExpanded by remember { mutableStateOf(true) }
         var selectedTask by remember { mutableStateOf("") }
         var predefinedTaskDropdownExpanded by remember { mutableStateOf(false) }
         var customTask by remember { mutableStateOf("") }
         var date by remember { mutableStateOf("") }
         var notes by remember { mutableStateOf("") }
+        var currentMileage by remember { mutableStateOf("") }
         val focusManager = LocalFocusManager.current
         val context = LocalContext.current
 
@@ -200,6 +201,18 @@ fun AddMaintenanceScreen(
                     enabled = false
                 )
 
+                // Current Mileage Input
+                OutlinedTextField(
+                    value = currentMileage,
+                    onValueChange = { currentMileage = it },
+                    label = { Text("Current Mileage") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                    keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus(force = true) })
+                )
+
                 // Notes Input
                 OutlinedTextField(
                     value = notes,
@@ -219,22 +232,28 @@ fun AddMaintenanceScreen(
             FloatingActionButton(
                 onClick = {
                     val finalTask = if (customTask.isNotEmpty()) customTask else selectedTask
-                    if (selectedCar != null && finalTask.isNotEmpty() && date.isNotEmpty()) {
-                        val maintenance = Maintenance(
-                            car_id = selectedCar!!.car_id,
-                            task = finalTask,
-                            date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(date)?.time ?: 0,
-                            currentMileage = 0,
-                            notes = notes
-                        )
-                        maintenanceViewModel.insert(maintenance)
-                        navController.navigate("view_cars") {
-                            popUpTo("add_maintenance") { inclusive = true }
-                            launchSingleTop = true
-                            anim {
-                                enter = 0
-                                exit = 0
+                    if (selectedCar != null && finalTask.isNotEmpty() && date.isNotEmpty() && currentMileage.isNotEmpty()) {
+                        try {
+                            val mileage = currentMileage.trim().toInt()
+                            val maintenance = Maintenance(
+                                car_id = selectedCar!!.car_id,
+                                task = finalTask,
+                                date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(date)?.time ?: 0,
+                                currentMileage = mileage,
+                                notes = notes
+                            )
+                            maintenanceViewModel.insert(maintenance)
+                            carViewModel.update(selectedCar!!.copy(latestMileage = mileage))
+                            navController.navigate("view_cars") {
+                                popUpTo("add_maintenance") { inclusive = true }
+                                launchSingleTop = true
+                                anim {
+                                    enter = 0
+                                    exit = 0
+                                }
                             }
+                        } catch (e: NumberFormatException) {
+                            // handle error
                         }
                     }
                 },

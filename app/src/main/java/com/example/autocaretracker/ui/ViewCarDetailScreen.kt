@@ -56,14 +56,28 @@ fun ViewCarDetailScreen(
         )
 
         car?.let { carDetail: Car ->
+            val latestMaintenance = maintenanceItems.value.maxByOrNull { it.date }
+            val lastUpdatedDate = latestMaintenance?.let { SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it.date)) }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                // Car Name and Image
+                // Car Name, Mileage, and Last Updated Date
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(carDetail.name, style = MaterialTheme.typography.headlineMedium)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "Mileage: ${carDetail.latestMileage} km",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    lastUpdatedDate?.let {
+                        Text(
+                            text = "Last updated: $it",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     carDetail.imagePath?.let { imagePath ->
                         val imageUri = Uri.parse(imagePath)
