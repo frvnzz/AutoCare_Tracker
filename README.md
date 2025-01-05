@@ -1,6 +1,6 @@
 # AutoCareTracker
 
-AutoCareTracker is an Android app for tracking car maintenance records.
+AutoCareTracker is an Android app for tracking car maintenance records. This Project was created for the course Mobile Coding during the third semester of the Bachelor's Programme 'Creative Computing' at the UAS St. Pölten
 
 ## Features
 
@@ -24,5 +24,3 @@ AutoCareTracker is an Android app for tracking car maintenance records.
 4. **Add Maintenance**: Navigate to "Add Maintenance" and fill in details.
 5. **View Maintenance History**: Car detail screen shows maintenance history.
 6. **Delete Maintenance**: Tap delete icon next to a maintenance record.
-
-This Project was created for the course Mobile Coding during the third semester of the Bachelor's Programme 'Creative Computing' at the UAS St. Pölten
