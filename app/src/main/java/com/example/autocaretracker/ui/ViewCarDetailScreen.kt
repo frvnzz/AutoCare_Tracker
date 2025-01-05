@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -20,6 +21,7 @@ import coil.compose.rememberImagePainter
 import com.example.autocaretracker.R
 import com.example.autocaretracker.data.CarRepository
 import com.example.autocaretracker.data.Car
+import com.example.autocaretracker.data.Maintenance
 import com.example.autocaretracker.data.MaintenanceRepository
 import com.example.autocaretracker.ui.theme.AutoCareTrackerTheme
 import java.text.SimpleDateFormat
@@ -40,19 +42,17 @@ fun ViewCarDetailScreen(
 
         val car = carState.value
         var showDialog by remember { mutableStateOf(false) }
+        var maintenanceToDelete by remember { mutableStateOf<Maintenance?>(null) }
 
         ConfirmDialog(
             showDialog = showDialog,
             onDismiss = { showDialog = false },
             onConfirm = {
-                carViewModel.delete(carId)
+                maintenanceToDelete?.let { maintenanceViewModel.delete(it.maintenance_id) }
                 showDialog = false
-                navController.navigate("view_cars") {
-                    popUpTo("view_car_detail/$carId") { inclusive = true }
-                }
             },
             title = "Confirm Delete",
-            text = "Are you sure you want to delete this car?"
+            text = "Are you sure you want to delete this maintenance item?"
         )
 
         car?.let { carDetail: Car ->
@@ -121,30 +121,46 @@ fun ViewCarDetailScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
                         ) {
-                            Column(
+                            Row(
                                 modifier = Modifier
+                                    .fillMaxWidth()
                                     .padding(16.dp)
-                                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                                    .background(MaterialTheme.colorScheme.surfaceVariant),
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(
-                                    text = "Task: ${maintenance.task}",
-                                    style = MaterialTheme.typography.bodyLarge
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "Date: ${
-                                        SimpleDateFormat(
-                                            "dd/MM/yyyy",
-                                            Locale.getDefault()
-                                        ).format(Date(maintenance.date))
-                                    }",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = "Notes: ${maintenance.notes}",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = maintenance.task,
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(maintenance.date)),
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Text(
+                                        text = maintenance.notes,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                Spacer(modifier = Modifier.width(8.dp))
+                                IconButton(
+                                    onClick = {
+                                        maintenanceToDelete = maintenance
+                                        showDialog = true
+                                    }
+                                ) {
+                                    Icon(
+                                        painter = painterResource(R.drawable.ic_delete),
+                                        contentDescription = "Delete",
+                                        tint = Color.Red
+                                    )
+                                }
                             }
                         }
                     }
